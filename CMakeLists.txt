@@ -4,17 +4,19 @@ project(pierre)
 
 add_executable( pierre )
 
-target_sources( pierre PRIVATE 
-  source/main.cpp
+target_compile_features(pierre PUBLIC
+	cxx_std_17
 )
 
-target_include_directories(pierre PRIVATE
-  ${CMAKE_SOURCE_DIR}/source
+target_sources( pierre PRIVATE 
+  source/main.cpp
 )
 
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+
+find_package(Vulkan REQUIRED)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/json EXCLUDE_FROM_ALL)
 add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/simplex_noise)
@@ -31,4 +33,10 @@ target_link_libraries(pierre PRIVATE
   SDL3::SDL3
   SDL3_image::SDL3_image
   sockpp
+  ${Vulkan_LIBRARIES}
+)
+
+target_include_directories(pierre PRIVATE
+  ${CMAKE_SOURCE_DIR}/source
+  ${Vulkan_INCLUDE_DIRS}
 )
