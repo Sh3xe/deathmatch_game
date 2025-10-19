@@ -6,12 +6,16 @@ MainMenu::~MainMenu()
 
 }
 
-void MainMenu::update()
+void MainMenu::update( double dt_sec )
 {
-	std::cout << "Hello from the main menu" << std::endl;
 }
 
-void MainMenu::render()
+void MainMenu::render( double dt_sec )
 {
 	
+}
+
+void MainMenu::on_event( const SDL_Event &event )
+{
+
 }

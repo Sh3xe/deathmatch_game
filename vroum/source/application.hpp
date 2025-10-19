@@ -15,9 +15,11 @@ namespace vv
 
 struct ApplicationParameters
 {
-	std::string window_title;
-	uint32_t window_width;
-	uint32_t window_height;
+	std::string window_title = "";
+	uint32_t window_width = 1920;
+	uint32_t window_height = 1080;
+
+	uint32_t target_fps = 30.0;
 };
 
 class Application
@@ -38,10 +40,13 @@ public:
 private:
 	bool init_sdl();
 
+	void dispatch_events();
+
 private:
 	ApplicationParameters m_params;
 	SDL_Window *m_window = nullptr;
 	std::vector<std::unique_ptr<Layer>> m_layers;
+	bool m_running = true;
 };
 
 } // namespace vv
