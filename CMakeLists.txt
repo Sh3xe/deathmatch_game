@@ -1,42 +1,24 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(pierre)
+project( eco_plus_dm )
 
-add_executable( pierre )
+add_executable( eco_plus_dm )
 
-target_compile_features(pierre PUBLIC
-	cxx_std_17
-)
+# C++ Standard
+target_compile_features( eco_plus_dm PUBLIC cxx_std_17 )
 
-target_sources( pierre PRIVATE 
+# Source files
+target_sources( eco_plus_dm PRIVATE
   source/main.cpp
+  source/main_menu.cpp
 )
 
-set(JSON_BuildTests OFF CACHE INTERNAL "")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+add_subdirectory( vroum )
 
-find_package(Vulkan REQUIRED)
+# Link libraries
+target_link_libraries( eco_plus_dm PRIVATE vroum )
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/json EXCLUDE_FROM_ALL)
-add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/simplex_noise)
-add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/glm EXCLUDE_FROM_ALL)
-add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/SDL3 EXCLUDE_FROM_ALL)
-add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/SDL3_image EXCLUDE_FROM_ALL)
-add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/sockpp EXCLUDE_FROM_ALL)
-
-# Link to the actual SDL3 library.
-target_link_libraries(pierre PRIVATE
-  simplex_noise
-  glm
-  nlohmann_json::nlohmann_json
-  SDL3::SDL3
-  SDL3_image::SDL3_image
-  sockpp
-  ${Vulkan_LIBRARIES}
-)
-
-target_include_directories(pierre PRIVATE
+# Header files
+target_include_directories(eco_plus_dm PRIVATE
   ${CMAKE_SOURCE_DIR}/source
-  ${Vulkan_INCLUDE_DIRS}
 )
