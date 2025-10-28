@@ -28,7 +28,7 @@ public:
 
 	void shutdown();
 
-	void send_render_command(const RenderCommand &hello);
+	void send_render_command(const RenderCmd &hello);
 	
 private:
 	
@@ -38,11 +38,13 @@ private:
 
 	void init_opengl(SDL_Window *window);
 
-	void execute_cmd(const RenderCommand &cmd);
+	void shutdown_opengl();
+
+	void execute_cmd(const RenderCmd &cmd);
 
 	std::mutex m_mtx;
 	std::condition_variable m_cv;
-	std::deque<RenderCommand> m_command_queue;
+	std::deque<RenderCmd> m_command_queue;
 	std::thread m_gpu_thread;
 	bool m_worker_running = true;
 

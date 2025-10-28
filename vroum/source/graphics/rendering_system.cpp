@@ -2,22 +2,27 @@
 #include <iostream>
 #include <glad/glad.h>
 
-vv::RenderingSystem::RenderingSystem()
+using namespace vv;
+
+RenderingSystem::RenderingSystem()
 {
 
 }
 
-void vv::RenderingSystem::start_thread()
+void RenderingSystem::start_thread()
 {
 	m_worker_running = true;
-	m_gpu_thread = std::thread(&vv::RenderingSystem::worker_loop, this);
+	m_gpu_thread = std::thread(&RenderingSystem::worker_loop, this);
 }
 
-void vv::RenderingSystem::worker_loop()
+void RenderingSystem::worker_loop()
 {
+	m_worker_running = true;
+
 	while(true)
 	{
-		RenderCommand cmd;
+		RenderCmd cmd;
+
 		{
 			// Wait for something to do
 			std::unique_lock<std::mutex> lock(m_mtx);
@@ -41,18 +46,22 @@ void vv::RenderingSystem::worker_loop()
 	}
 }
 
-void vv::RenderingSystem::execute_cmd(const vv::RenderCommand &cmd)
+void RenderingSystem::execute_cmd(const RenderCmd &cmd)
 {
 	switch(cmd.type)
 	{
-	case vv::RenderCommandTypes::initialize:
-		this->init_opengl(std::get< vv::Ref<vv::InitializeCmd> >(cmd.data)->window);
+	case RenderCmdType::initialize:
+		this->init_opengl(std::get< Ref<InitializeCmd> >(cmd.data)->window);
+		break;
+	case RenderCmdType::shutdown:
+		this->shutdown_opengl();
+		break;
 	default:
 		break;
 	}
 }
 
-void vv::RenderingSystem::send_render_command(const vv::RenderCommand &cmd)
+void RenderingSystem::send_render_command(const RenderCmd &cmd)
 {
 	{
 		std::lock_guard<std::mutex> lock(m_mtx); 	
@@ -61,33 +70,32 @@ void vv::RenderingSystem::send_render_command(const vv::RenderCommand &cmd)
 	m_cv.notify_one();
 }
 
-bool vv::RenderingSystem::init( SDL_Window *window )
+bool RenderingSystem::init( SDL_Window *window )
 {
 	// start the rendering thread
 	start_thread();
 
 	// immediatly send a command to the opengl thread
 	// that tells it to initialize opengl on its end
-	RenderCommand cmd;
-	cmd.type = vv::RenderCommandTypes::initialize;
-	cmd.data = std::make_shared<vv::InitializeCmd>(window);
+	RenderCmd cmd (RenderCmdType::initialize, std::make_shared<InitializeCmd>(window));
 	send_render_command(cmd);
 
 	return true;
 }
 
-void vv::RenderingSystem::shutdown()
+void RenderingSystem::shutdown()
 {
 	{
 		std::lock_guard<std::mutex> lock(m_mtx);
-		m_worker_running = false;
+		m_command_queue.clear();
 	}
-	m_cv.notify_all();
+	
+	send_render_command(RenderCmd(RenderCmdType::shutdown, ShutdownCmd()));
+
 	m_gpu_thread.join();
-	SDL_GL_DestroyContext(m_context);
 }
 
-void vv::RenderingSystem::init_opengl( SDL_Window *window )
+void RenderingSystem::init_opengl( SDL_Window *window )
 {
 	m_opengl_initialized = false;
 
@@ -126,4 +134,10 @@ void vv::RenderingSystem::init_opengl( SDL_Window *window )
 	glViewport(0, 0, w_width, w_height);
 
 	m_opengl_initialized = true;
+}
+
+void RenderingSystem::shutdown_opengl()
+{
+	SDL_GL_DestroyContext(m_context);
+	m_worker_running = false;
 }

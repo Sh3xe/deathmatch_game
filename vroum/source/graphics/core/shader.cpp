@@ -4,7 +4,7 @@
 // #include "gldebug.hpp"
 // #include "core/logger.hpp"
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <fstream>
 #include <iterator>
 

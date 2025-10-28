@@ -14,6 +14,8 @@ target_sources( vroum PRIVATE
   source/graphics/rendering_system.cpp
   source/graphics/rendering_system.hpp
   source/graphics/render_cmd.hpp
+  source/graphics/core/shader.hpp
+  source/graphics/core/shader.cpp
   source/engine.cpp
   source/engine.hpp
   source/logger.cpp

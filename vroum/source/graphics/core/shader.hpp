@@ -2,7 +2,6 @@
 
 #include "vv_headers.hpp"
 #include <string>
-#include <stdint.h>
 
 namespace vv
 {

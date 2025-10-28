@@ -15,17 +15,30 @@ struct InitializeCmd
 	SDL_Window *window;
 };
 
-enum class RenderCommandTypes
+struct ShutdownCmd
 {
-	initialize
+	// empty
 };
 
-struct RenderCommand
+enum class RenderCmdType
 {
-	RenderCommandTypes type;
-	std::variant<
-		std::shared_ptr<InitializeCmd>
-	> data;
+	initialize, shutdown
+};
+
+struct RenderCmd
+{
+	using RenderCmdVariant = std::variant<
+		std::shared_ptr<InitializeCmd>,
+		ShutdownCmd
+	>;
+
+	RenderCmd() = default;
+
+	RenderCmd(const RenderCmdType &type, const RenderCmdVariant &data ):
+		type(type), data(data) {}
+
+	RenderCmdType type;
+	RenderCmdVariant data;
 };
 
 } // namespace vv
