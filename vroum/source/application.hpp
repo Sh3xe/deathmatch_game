@@ -2,6 +2,7 @@
 
 #include "vv_headers.hpp"
 #include "layer.hpp"
+#include "graphics/graphics_system.hpp"
 
 #include <SDL3/SDL.h>
 
@@ -26,23 +27,32 @@ class Application
 {
 public:
 	Application( const ApplicationParameters &params );
+	~Application();
 
-	bool init_modules();
+	bool init_systems();
+	void shutdown_systems();
 
 	template <typename LayerType>
 	void add_layer()
 	{
-		m_layers.push_back( std::make_unique<LayerType>() );
+		auto layer_ptr = std::make_unique<LayerType>();
+		layer_ptr->m_app = this;
+		layer_ptr->m_rend = &m_graphics_sys;
+		m_layers.push_back( std::move(layer_ptr) );
 	}
 
 	void run();
 
+	GraphicsSystem &graphic_sys() { return m_graphics_sys; }
+
 private:
-	bool init_sdl();
+	bool init_window();
+	void shutdown_window();
 
 	void dispatch_events();
 
 private:
+	GraphicsSystem m_graphics_sys;
 	ApplicationParameters m_params;
 	SDL_Window *m_window = nullptr;
 	std::vector<std::unique_ptr<Layer>> m_layers;

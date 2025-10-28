@@ -19,11 +19,13 @@ int main() {
 
 	vv::Application application (params);
 
-	application.init_modules();
+	application.init_systems();
 
 	application.add_layer<MainMenu>();
 
 	application.run();
+
+	application.shutdown_systems();
 	
 	return 0;
 }

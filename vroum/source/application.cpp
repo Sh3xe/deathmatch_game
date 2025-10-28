@@ -10,6 +10,10 @@ vv::Application::Application( const ApplicationParameters &params ):
 {
 }
 
+vv::Application::~Application()
+{
+}
+
 void vv::Application::run()
 {
 	auto current_time = std::chrono::steady_clock::now();
@@ -71,31 +75,49 @@ void vv::Application::dispatch_events()
 	}
 }
 
-bool vv::Application::init_modules()
+bool vv::Application::init_systems()
 {
-	if( !init_sdl() )
+	if( !init_window() )
 	{
-		std::cout << "Cannot initialize SDL3" << std::endl;
+		VV_ERROR("Cannot initialize SDL3");
+		return false;
+	}
+
+	if( !m_graphics_sys.init( m_window ) )
+	{
+		VV_ERROR("Cannot initialize The graphic system");
 		return false;
 	}
 
 	return true;
 }
 
-bool vv::Application::init_sdl()
+void vv::Application::shutdown_systems()
+{
+	m_graphics_sys.shutdown();
+	shutdown_window();
+}
+
+void vv::Application::shutdown_window()
+{
+	SDL_DestroyWindow(m_window);
+}
+
+bool vv::Application::init_window()
 {
 	assert( m_window == nullptr ); // double initialization
 
-	if (! SDL_Init( SDL_INIT_VIDEO | SDL_INIT_EVENTS ) )
+	if (! SDL_Init( SDL_INIT_VIDEO | SDL_INIT_EVENTS) )
 	{
-		std::cout << "Error when calling SDL_Init" << SDL_GetError() << std::endl;
+		VV_ERROR("Error when calling SDL_Init", SDL_GetError());
 		return false;
 	}
 
-	m_window = SDL_CreateWindow(m_params.window_title.c_str(), m_params.window_width, m_params.window_height, 0 );
+	SDL_WindowFlags window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
+	m_window = SDL_CreateWindow(m_params.window_title.c_str(), m_params.window_width, m_params.window_height, window_flags );
 
 	if( m_window == nullptr ) {
-		std::cout << "Error when calling SDL_CreateWindow: " << SDL_GetError() << std::endl;
+		VV_ERROR("Error when calling SDL_CreateWindow: ", SDL_GetError());
 		return false;
 	}
 

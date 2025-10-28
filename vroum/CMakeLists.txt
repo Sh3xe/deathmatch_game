@@ -10,8 +10,14 @@ target_compile_features(vroum PUBLIC
 )
 
 # Source files
-target_sources( vroum PRIVATE 
+target_sources( vroum PRIVATE
+  source/graphics/graphics_system.cpp
+  source/graphics/graphics_system.hpp
   source/application.cpp
+  source/application.hpp
+  source/logger.cpp
+  source/logger.hpp
+  source/layer.hpp
 )
 
 # Do not build any example / tests
@@ -26,6 +32,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/dependencies/glm EXCLUDE_FROM_ALL)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/dependencies/SDL3 EXCLUDE_FROM_ALL)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/dependencies/SDL3_image EXCLUDE_FROM_ALL)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/dependencies/sockpp EXCLUDE_FROM_ALL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/dependencies/glad EXCLUDE_FROM_ALL)
 
 # Link libraries
 target_link_libraries(vroum PUBLIC
@@ -35,6 +42,7 @@ target_link_libraries(vroum PUBLIC
   SDL3::SDL3
   SDL3_image::SDL3_image
   sockpp
+  glad
 )
 
 # Header files
