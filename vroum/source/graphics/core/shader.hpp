@@ -1,5 +1,6 @@
 #pragma once
 
+#include "vv_headers.hpp"
 #include <string>
 #include <stdint.h>
 
@@ -23,11 +24,10 @@ public:
 	void set_vec4( const std::string& name, float x, float y, float z, float w);
 	void set_mat4( const std::string& name, float* matrix );
 
-
 private:
-	uint32_t compile_shader( const std::string &path, uint32_t type);
+	vv::u32 compile_shader( const std::string &path, vv::u32 type);
 
-	uint32_t m_id;
+	vv::u32 m_id;
 	bool m_is_valid = false;
 };
 

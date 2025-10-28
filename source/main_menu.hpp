@@ -16,6 +16,5 @@ public:
 	void on_event( const SDL_Event &event ) override;
 
 private:
-	vv::Scene2D m_scene;
 	float m_time;
 };

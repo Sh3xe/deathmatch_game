@@ -2,12 +2,16 @@
 
 #include <cstdint>
 #include <cassert>
+#include <memory>
 
 #include "logger.hpp"
 #include "vv_errors.hpp"
 
 namespace vv
 {
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+
 	using f32 = float;
 	using f64 = double;
 

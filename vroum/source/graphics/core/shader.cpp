@@ -10,7 +10,7 @@
 
 vv::Shader::Shader(const std::string& vs_path, const std::string &fs_path) {
 	m_is_valid = true;
-	uint32_t vs = 0, fs = 0;
+	vv::u32 vs = 0, fs = 0;
 
 	// compiles shaders
 	if (vs_path != "")
@@ -36,7 +36,7 @@ vv::Shader::Shader(const std::string& vs_path, const std::string &fs_path) {
 	if (!success) {
 		char info[512];
 		glGetProgramInfoLog(m_id, 512, nullptr, info);
-		// SD_ERROR("Can't link shader: ", info);
+		VV_ERROR("Can't link shader: ", info);
 		m_is_valid = false;
 	}
 
@@ -87,12 +87,12 @@ void vv::Shader::set_mat4(const std::string& name, float* matrix) {
 	glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, matrix);
 }
 
-uint32_t vv::Shader::compile_shader(const std::string& path, uint32_t type) {
+vv::u32 vv::Shader::compile_shader(const std::string& path, vv::u32 type) {
 
 	std::fstream file{ path, std::ios::in };
 
 	if(!file) {
-		// SD_ERROR("Failed to open shader: ", path, "\n");
+		VV_ERROR("Failed to open shader: ", path, "\n");
 		return 0;
 	}
 
@@ -103,7 +103,7 @@ uint32_t vv::Shader::compile_shader(const std::string& path, uint32_t type) {
 
 	file.close();
 
-	uint32_t shader = glCreateShader(type);
+	vv::u32 shader = glCreateShader(type);
 	glShaderSource(shader, 1, &c_str_source, nullptr);
 	glCompileShader(shader);
 
@@ -112,7 +112,7 @@ uint32_t vv::Shader::compile_shader(const std::string& path, uint32_t type) {
 	if (!success) {
 		char infos[512];
 		glGetShaderInfoLog(shader, 512, nullptr, infos);
-		// SD_ERROR("Failed to compile shader : ", infos);
+		VV_ERROR("Failed to compile shader : ", infos);
 		m_is_valid = false;
 		return 0;
 	}

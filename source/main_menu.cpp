@@ -28,8 +28,4 @@ void MainMenu::render( double dt_sec )
 
 void MainMenu::on_event( const SDL_Event &event )
 {
-	if(event.type == SDL_EVENT_KEY_DOWN && event.key.scancode == SDL_SCANCODE_A)
-	{
-		m_app->graphic_sys().send_msg_to_thread("Hello!!");
-	}
 }

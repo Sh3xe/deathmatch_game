@@ -1,20 +1,20 @@
-#include "application.hpp"
+#include "engine.hpp"
 #include <iostream>
 #include <chrono>
 #include <thread>
 
 using dseconds = std::chrono::duration<double, std::ratio<1,1>>;
 
-vv::Application::Application( const ApplicationParameters &params ):
+vv::Engine::Engine( const EngineParameters &params ):
 	m_params(params)
 {
 }
 
-vv::Application::~Application()
+vv::Engine::~Engine()
 {
 }
 
-void vv::Application::run()
+void vv::Engine::run()
 {
 	auto current_time = std::chrono::steady_clock::now();
 	double target_dt = 1.0 / m_params.target_fps;
@@ -52,7 +52,7 @@ void vv::Application::run()
 	}
 }
 
-void vv::Application::dispatch_events()
+void vv::Engine::dispatch_events()
 {
 	// Save all the events in one array
 	SDL_Event event;
@@ -75,7 +75,7 @@ void vv::Application::dispatch_events()
 	}
 }
 
-bool vv::Application::init_systems()
+bool vv::Engine::init_systems()
 {
 	if( !init_window() )
 	{
@@ -92,18 +92,18 @@ bool vv::Application::init_systems()
 	return true;
 }
 
-void vv::Application::shutdown_systems()
+void vv::Engine::shutdown_systems()
 {
 	m_graphics_sys.shutdown();
 	shutdown_window();
 }
 
-void vv::Application::shutdown_window()
+void vv::Engine::shutdown_window()
 {
 	SDL_DestroyWindow(m_window);
 }
 
-bool vv::Application::init_window()
+bool vv::Engine::init_window()
 {
 	assert( m_window == nullptr ); // double initialization
 

@@ -2,9 +2,9 @@
 #include "main_menu.hpp"
 #include <iostream>
 
-vv::ApplicationParameters load_params()
+vv::EngineParameters load_params()
 {
-	vv::ApplicationParameters params;
+	vv::EngineParameters params;
 
 	params.window_height = 1080;
 	params.window_width = 1920;
@@ -17,7 +17,7 @@ int main() {
 	
 	auto params = load_params();
 
-	vv::Application application (params);
+	vv::Engine application (params);
 
 	application.init_systems();
 

@@ -11,10 +11,11 @@ target_compile_features(vroum PUBLIC
 
 # Source files
 target_sources( vroum PRIVATE
-  source/graphics/graphics_system.cpp
-  source/graphics/graphics_system.hpp
-  source/application.cpp
-  source/application.hpp
+  source/graphics/rendering_system.cpp
+  source/graphics/rendering_system.hpp
+  source/graphics/render_cmd.hpp
+  source/engine.cpp
+  source/engine.hpp
   source/logger.cpp
   source/logger.hpp
   source/layer.hpp

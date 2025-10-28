@@ -6,13 +6,13 @@
 namespace vv
 {
 
-class Application;
-class GraphicsSystem;
+class Engine;
+class RenderingSystem;
 
 class Layer
 {
 public:
-	friend class Application;
+	friend class Engine;
 
 	virtual ~Layer() {}
 
@@ -27,8 +27,8 @@ public:
 	virtual void on_event( const SDL_Event &event ) = 0;
 
 protected:
-	Application *m_app;
-	GraphicsSystem *m_rend;
+	Engine *m_app;
+	RenderingSystem *m_rend;
 };
 
 } // namespace vv
